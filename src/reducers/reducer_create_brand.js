@@ -7,7 +7,6 @@ export default function(state = {}, action) {
   switch (action.type) {
   case CREATE_BRAND:
     if (!action.error) {
-      console.log('create', action.payload)
       return action.payload
     }
     return {error: action.error}
@@ -15,7 +14,6 @@ export default function(state = {}, action) {
     if (!action.error) {
       sessionStorage.setItem('name', action.payload.data.name)
       sessionStorage.setItem('website', action.payload.data.website)
-      console.log('fetch, info', action.payload.data)
       return {...state, ...action.payload.data}
     }
     return {error: action.error}

@@ -9,13 +9,11 @@ export default function(state = {}, action) {
     if (!action.error) {
       sessionStorage.setItem('website', action.payload.data.website)
       sessionStorage.setItem('name', action.payload.data.name)
-      console.log('fetch, general', action.payload.data)
       return action.payload.data
     }
     return {error: action.error}
   case FETCH_RATING:
     if (!action.error) {
-      console.log('fetch, rating', action.payload.data.data)
       return action.payload.data.data
     }
     return {error: action.error}

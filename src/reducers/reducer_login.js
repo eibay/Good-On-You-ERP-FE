@@ -7,7 +7,6 @@ export default function(state = {}, action) {
   switch (action.type) {
   case LOG_IN:
     if (!action.error) {
-      console.log('login', action.payload.data)
       sessionStorage.setItem('jwt', action.payload.data.accessToken)
       return {...state, token: action.payload.data.accessToken}
     }
@@ -15,13 +14,11 @@ export default function(state = {}, action) {
   case AUTH_USER:
     return {...state, token: action.payload}
   case AUTH_ERROR:
-    console.log('error', action.payload)
     return {...state, error: 'Username or Password is Incorrect'}
   case LOG_OUT:
     return {...state, token: null}
   case FETCH_USER_INFO:
     if (!action.error) {
-      console.log('fetch user', action.payload)
       return {user: action.payload.data.data[0]}
     }
     return {error: action.error}

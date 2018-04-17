@@ -8,7 +8,6 @@ export default function(state = {}, action) {
   switch (action.type) {
   case FETCH_RATING_SCORE:
     if (!action.error) {
-      console.log('fetch, rating score', action.payload.data.data)
       return action.payload.data.data
     }
     return {error: action.error}

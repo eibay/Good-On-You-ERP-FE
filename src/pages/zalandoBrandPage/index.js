@@ -31,13 +31,14 @@ class ZalandoBrandPage extends Component {
     let error = nextProps.zolando.error
     if(nextProps.searchResults !== this.props.searchResults) {
       _.map(nextProps.searchResults, (val, i) => {
-        if(val.id == this.brandId) {
+        if(val.Id == this.brandId) {
           this.setState({
             currentBrandIndex: nextProps.searchResults.indexOf(val),
-            prevBrand: nextProps.searchResults.indexOf(val) !== 0 ? nextProps.searchResults[nextProps.searchResults.indexOf(val) - 1].id : null,
-            nextBrand: nextProps.searchResults[nextProps.searchResults.indexOf(val) + 1].id,
+            prevBrand: nextProps.searchResults.indexOf(val) !== 0 ? nextProps.searchResults[nextProps.searchResults.indexOf(val) - 1].Id : null,
+            nextBrand: nextProps.searchResults[nextProps.searchResults.indexOf(val) + 1].Id,
           })
         }
+        
       })
     }
     if(nextProps.zolando !== this.props.zolando) {
@@ -46,29 +47,35 @@ class ZalandoBrandPage extends Component {
           this.props.history.push('/zalandoSearch')
         }
       }
+      if(!nextProps.searchResults[0]) {   
+        this.props.history.push('/zalandoSearch')
+      }
       this.setState({
         isLoading: false,
         results: nextProps.zolando,
       })
+      
     }
   }
 
-  renderBrandCover() {
-    if (this.state.isLoading === true) {
-      return (<Loader active inline='centered' />)
-    } else if (!this.props.zolando) {
-      return (
-        <div> loading... </div>
-      )
-    } else {
-      const zcover = this.props.zolando.cover
-      return (
-        <div className='brand-cover'>
-          { (zcover) ? <img className='brand-cover-image' src={zcover} /> : <img src="https://picsum.photos/1500/300" /> }
-        </div>
-      )
-    }
-  }
+  // renderBrandCover() {
+  //   if (this.state.isLoading === true) {
+  //     return (<Loader active inline='centered' />)
+  //   } else if (!this.props.zolando) {
+  //     return (
+  //       <div> loading... </div>
+  //     )
+  //   } else {
+  //     const zcover = this.state.results.cover
+  //     console.log('cover', zcover)
+      
+  //     return (
+  //       <div className='brand-cover'>
+  //         { zcover ? <img className='brand-cover-image' src={zcover} /> : <img src="https://picsum.photos/1500/300" /> }
+  //       </div>
+  //     )
+  //   }
+  // }
 
   renderTotalScore() {
     const zprops = this.props.zolando
@@ -86,10 +93,10 @@ class ZalandoBrandPage extends Component {
     if (this.state.isLoading === true ){
       return ( <Loader active inline='centered'/>)
     } else {
-      return _.map(zprops.ratings.headlines, headline => {
+      return _.map(zprops.ratings.headlines, (headline, index) => {
         const name = (headline.name).replace(/\b\w/g, function (l) { return l.toUpperCase() })
         return (
-          <tr><td>{name}</td><td>{headline.score} / {headline.max_score}</td><td>{headline.label}</td></tr>
+          <li key={index}><span>{name}</span><span>{headline.score} / {headline.max_score}</span><span>{headline.label}</span></li>
         )
       })
     }
@@ -153,16 +160,16 @@ class ZalandoBrandPage extends Component {
       let categories = (this.props.zolando.categories).join(', ')
       let contact_mail_to = 'mailto:' + contact_email
       return (
-        <table className='table-details'>
-          <tr><td>Overall Rating</td><td className='item'>{ratings_label}<Dots dots={ratings_dots}/></td></tr>
-          { (categories) ? <tr><td>Categories</td><td className='item'>{categories}</td></tr> : null }
-          { (sku) ? <tr><td>SKUs</td><td className='item'>{sku}</td></tr> : null }
-          { (price) ? <tr><td>Price</td><td className='item'><Price price={price} /></td></tr> : null }
-          { (parent_company) ? <tr><td>Parent Company</td><td className='item'>{parent_company}</td></tr> : null }
-          { (size) ? <tr><td>Size</td><td><Size size={size} /></td></tr> : null }
-          { (contact_name) ? <tr><td>Contact Name</td><td className='item'>{contact_name}</td></tr> : null }
-          {(contact_email) ? <tr><td>Contact Email</td><td className='item '><a className='contact-email' href={contact_mail_to}>{ contact_email }</a></td></tr>  : null }
-        </table>
+        <ul className='table-details'>
+          <li className='details-row'><span className='item'>Overall Rating<span><Icon name='question circle' /></span></span><span className='item'>{ratings_label}<Dots dots={ratings_dots}/></span></li>
+          {(categories) ? <li className='details-row'><span className='item'>Categories<span><Icon name='question circle' /></span> </span><span className='item'>{categories}</span></li> : null }
+          {(sku) ? <li className='details-row'><span className='item'>SKUs<span><Icon name='question circle' /></span></span><span className='item'>{sku}</span></li> : null }
+          {(price) ? <li className='details-row'><span className='item'>Price<span><Icon name='question circle' /></span></span><span className='item'><Price price={price} /></span></li> : null }
+          {(parent_company) ? <li className='details-row'><span className='item'>Parent Company<span><Icon name='question circle' /></span></span><span className='item'>{parent_company}</span></li> : null }
+          {(size) ? <li className='details-row'><span className='item'>Size<span><Icon name='question circle' /></span></span><span className='item'><Size size={size} /></span></li> : null }
+          {(contact_name) ? <li className='details-row'><span className='item'>Contact Name<span><Icon name='question circle' /></span></span><span className='item'>{contact_name}</span></li> : null }
+          {(contact_email) ? <li className='details-row'><span className='item'>Contact Email<span><Icon name='question circle' /></span></span><span className='item '><a className='contact-email' href={contact_mail_to}>{ contact_email }</a></span></li>  : null }
+        </ul>
       )
     }
   }
@@ -196,6 +203,7 @@ class ZalandoBrandPage extends Component {
   //handles the next/previous brand navigation.  Based on the index of the current brand in search results, 
   //will navigate to the correct brand by adding/subtracting the index accordingly.
   handleNav(id, indx, name) {
+    console.log('nav', id, indx, name)
     if(name === 'prev') {
       this.setState({
         currentBrandIndex: this.state.currentBrandIndex - 1,
@@ -228,8 +236,7 @@ class ZalandoBrandPage extends Component {
       console.log('searchProps', this.props.searchResults)
       console.log('zstate', this.state)
 
-      const image = (zprops.cover ? zprops.cover : <img src="https://picsum.photos/1500/300" /> )
-      console.log('image', image)
+      const image = (!this.state.results.cover ? 'https://picsum.photos/1500/300' : this.state.results.cover )
 
       const coverStyle = {
         color: 'white',
@@ -253,11 +260,13 @@ class ZalandoBrandPage extends Component {
               <div className='next-brand'><button className='nav-button' onClick={() => this.handleNav(this.state.nextBrand, this.state.currentBrandIndex, 'next')}>View next brand <Icon name='chevron right' /></button></div>
             </div>
             <div className='brand-card'>
-              <div className='brand-home'>
-                <img src={zprops.logo} className='brand-logo' />
-                <div className='brand-title'>{zprops.name}</div>
-                <p className='brand-hq'>{(zprops.headquarters) ? zprops.headquarters : 'Headquarters'} / <a href={zprops.website && zprops.website.includes('http') ?  zprops.website : `http://${zprops.website}`} target='_blank' className='web'>Website</a></p>
-                <p className='brand-sentence'>{zprops.sentence}</p>
+              <div className='brand-card-home'>
+                <div className='brand-home'>
+                  <img src={zprops.logo} className='brand-logo' />
+                  <div className='brand-title'>{zprops.name}</div>
+                  <p className='brand-hq'>{(zprops.headquarters) ? zprops.headquarters : 'Headquarters'} / <a href={zprops.website && zprops.website.includes('http') ?  zprops.website : `http://${zprops.website}`} target='_blank' className='web'>Website</a></p>
+                  <p className='brand-sentence'>{zprops.sentence}</p>
+                </div>
               </div>
 
               <div className='brand-details'>
@@ -269,16 +278,16 @@ class ZalandoBrandPage extends Component {
               <div className='brand-ratings'>
                 <div className='card-title'>Ratings</div>
                 <div className='card-content'>
-                  <table className='table-ratings'>
-                    <tr>
-                      <td> Total Score </td>
-                      <td>{this.renderTotalScore()}</td>
-                      <td>
+                  <ul className='table-ratings'>
+                    <li>
+                      <span> Total Score </span>
+                      <span>{this.renderTotalScore()}</span>
+                      <span>
                         {this.renderLabel()} <span> <Dots dots={ratings_dots} /></span>
-                      </td>
-                    </tr>
+                      </span>
+                    </li>
                     {this.renderRatings()}
-                  </table>
+                  </ul>
                 </div>
               </div>
             </div>

@@ -5,7 +5,6 @@ export default function(state = [], action) {
   switch (action.type) {
   case FETCH_CAUSE:
     if (!action.error) {
-      console.log('fetch, causes', action.payload.data.data)
       return action.payload.data.data
     }
     return {error: action.error}
