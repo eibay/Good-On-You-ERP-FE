@@ -54,8 +54,12 @@ class ZalandoSearch extends Component {
   }
 
   componentWillMount() {
-    this.props.filteredSearch()
-    this.setState({isLoading: true})
+    if(this.props.searchResults[0]) {
+      this.setState({results: this.props.searchResults})
+    } else {
+      this.props.filteredSearch()
+      this.setState({isLoading: true})
+    }
   }
 
 
@@ -419,14 +423,8 @@ class ZalandoSearch extends Component {
   }
 }
 
-// <div>{_.map(this.state.renderFilteredArr, val => <button value={val} onClick={this.handleChip} key={val} className='chip'>{val}</button>)}</div>
-
-
-
-
-
 function mapStateToProps(state) {
-  return {zolando: state.zolando, state}
+  return {searchResults: state.zalandoSearchResults, zolando: state.zolando, state}
 }
 
 export default connect(mapStateToProps, { filteredSearch, finalSearchResults })( ZalandoSearch )

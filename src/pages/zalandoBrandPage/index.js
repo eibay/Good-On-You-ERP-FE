@@ -35,7 +35,7 @@ class ZalandoBrandPage extends Component {
           this.setState({
             currentBrandIndex: nextProps.searchResults.indexOf(val),
             prevBrand: nextProps.searchResults.indexOf(val) !== 0 ? nextProps.searchResults[nextProps.searchResults.indexOf(val) - 1].Id : null,
-            nextBrand: nextProps.searchResults[nextProps.searchResults.indexOf(val) + 1].Id,
+            nextBrand: nextProps.searchResults.length > nextProps.searchResults.indexOf(val + 1) ? nextProps.searchResults[nextProps.searchResults.indexOf(val) + 1].Id : null,
           })
         }
         
@@ -214,7 +214,7 @@ class ZalandoBrandPage extends Component {
       this.setState({
         currentBrandIndex: this.state.currentBrandIndex + 1,
         prevBrand: this.props.searchResults[indx].Id,
-        nextBrand: indx !== this.props.searchResults.length - 1 ? this.props.searchResults[indx + 2].Id : null,
+        nextBrand: indx !== this.props.searchResults.length - 2 ? this.props.searchResults[indx + 2].Id : null,
       })
     }
     this.props.brandsHomePage(id)
@@ -255,9 +255,23 @@ class ZalandoBrandPage extends Component {
 
           <div className='brand-page'>
             <div className='brand-nav-container'>
-              <div className='prev-brand'><button onClick={() => this.handleNav(this.state.prevBrand, this.state.currentBrandIndex, 'prev')} className='nav-button'><Icon name='chevron left'/> View previous brand</button></div>
+              <div className='prev-brand'> 
+                {this.state.prevBrand ? 
+                  <button onClick={() => this.handleNav(this.state.prevBrand, this.state.currentBrandIndex, 'prev')} className='nav-button'>
+                    <Icon name='chevron left'/> 
+                    View previous brand
+                  </button> :
+                  ''}
+              </div>
               <div className='back-to-search'><Link to='/zalandoSearch'>Back to Search Results</Link></div>
-              <div className='next-brand'><button className='nav-button' onClick={() => this.handleNav(this.state.nextBrand, this.state.currentBrandIndex, 'next')}>View next brand <Icon name='chevron right' /></button></div>
+              <div className='next-brand'>
+                {this.state.nextBrand ? 
+                  <button className='nav-button' onClick={() => this.handleNav(this.state.nextBrand, this.state.currentBrandIndex, 'next')}>
+                    View next brand 
+                    <Icon name='chevron right' />
+                  </button> :
+                  ''}
+              </div>
             </div>
             <div className='brand-card'>
               <div className='brand-card-home'>
