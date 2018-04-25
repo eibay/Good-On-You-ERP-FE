@@ -58,25 +58,6 @@ class ZalandoBrandPage extends Component {
     }
   }
 
-  // renderBrandCover() {
-  //   if (this.state.isLoading === true) {
-  //     return (<Loader active inline='centered' />)
-  //   } else if (!this.props.zolando) {
-  //     return (
-  //       <div> loading... </div>
-  //     )
-  //   } else {
-  //     const zcover = this.state.results.cover
-  //     console.log('cover', zcover)
-      
-  //     return (
-  //       <div className='brand-cover'>
-  //         { zcover ? <img className='brand-cover-image' src={zcover} /> : <img src="https://picsum.photos/1500/300" /> }
-  //       </div>
-  //     )
-  //   }
-  // }
-
   renderTotalScore() {
     const zprops = this.props.zolando
     if (this.state.isLoading === true) {
@@ -96,7 +77,7 @@ class ZalandoBrandPage extends Component {
       return _.map(zprops.ratings.headlines, (headline, index) => {
         const name = (headline.name).replace(/\b\w/g, function (l) { return l.toUpperCase() })
         return (
-          <li key={index}><span>{name}</span><span>{headline.score} / {headline.max_score}</span><span>{headline.label}</span></li>
+          <li key={index}><span class='rating-item-head'>{name}</span><span class='rating-item'>{headline.score} / {headline.max_score}</span><span class='rating-item'>{headline.label}</span></li>
         )
       })
     }
@@ -294,9 +275,9 @@ class ZalandoBrandPage extends Component {
                 <div className='card-content'>
                   <ul className='table-ratings'>
                     <li>
-                      <span> Total Score </span>
-                      <span>{this.renderTotalScore()}</span>
-                      <span>
+                      <span class='rating-item-head'> Total Score </span>
+                      <span class='rating-item'>{this.renderTotalScore()}</span>
+                      <span class='rating-item'>
                         {this.renderLabel()} <span> <Dots dots={ratings_dots} /></span>
                       </span>
                     </li>
